@@ -19,8 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => EnsureAdmin::class,
         ]);
 
-        // Trust all proxies for production (important for HTTPS detection with payment redirects)
-        $middleware->trustProxies(headers: \Illuminate\Http\Request::HEADER_X_FORWARDED_FOR);
+        // Trust all reverse proxies in production (Render, Cloudflare, load balancers)
+        $middleware->trustProxies(at: '*');
 
         // Exclude API routes wrapped in 'web' middleware from CSRF checks
         $middleware->validateCsrfTokens(except: [
