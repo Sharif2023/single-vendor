@@ -32,9 +32,10 @@ class AdminOrderController extends Controller
         }
 
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('customer_name', 'ilike', "%{$search}%")
-                  ->orWhere('customer_email', 'ilike', "%{$search}%")
+            $like = \DB::connection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
+            $query->where(function ($q) use ($search, $like) {
+                $q->where('customer_name', $like, "%{$search}%")
+                  ->orWhere('customer_email', $like, "%{$search}%")
                   ->orWhere('id', $search);
             });
         }

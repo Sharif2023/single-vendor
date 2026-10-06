@@ -27,9 +27,10 @@ class AdminProductController extends Controller
         $query = Product::withTrashed()->orderByDesc('created_at')->orderByDesc('id');
 
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'ilike', "%{$search}%")
-                  ->orWhere('sku', 'ilike', "%{$search}%");
+            $like = \DB::connection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
+            $query->where(function ($q) use ($search, $like) {
+                $q->where('name', $like, "%{$search}%")
+                  ->orWhere('sku', $like, "%{$search}%");
             });
         }
 

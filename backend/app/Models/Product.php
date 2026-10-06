@@ -51,15 +51,29 @@ class Product extends Model
     }
 
     /**
-     * Full-text search using PostgreSQL tsvector index.
+     * Search scope: Full-text on PostgreSQL with fallback for SQLite/MySQL.
      */
     public function scopeSearch($query, string $term)
     {
-        $escaped = addslashes($term);
-        return $query->whereRaw(
-            "to_tsvector('english', name || ' ' || COALESCE(description, '')) @@ plainto_tsquery('english', ?)",
-            [$term]
-        )->orWhere('name', 'ilike', "%{$escaped}%");
+        $term = trim($term);
+        if (empty($term)) {
+            return $query;
+        }
+
+        if (\DB::connection()->getDriverName() === 'pgsql') {
+            return $query->where(function ($q) use ($term) {
+                $q->whereRaw(
+                    "to_tsvector('english', name || ' ' || COALESCE(description, '')) @@ plainto_tsquery('english', ?)",
+                    [$term]
+                )->orWhere('name', 'ilike', "%{$term}%");
+            });
+        }
+
+        return $query->where(function ($q) use ($term) {
+            $q->where('name', 'like', "%{$term}%")
+              ->orWhere('description', 'like', "%{$term}%")
+              ->orWhere('sku', 'like', "%{$term}%");
+        });
     }
 
     // ─── Helpers ─────────────────────────────────────────────────────────────────

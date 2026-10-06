@@ -24,11 +24,13 @@ return new class extends Migration
             $table->index(['status', 'stock']);
         });
 
-        // Full-text search index on name and description (PostgreSQL)
-        \DB::statement("CREATE INDEX products_search_idx ON products USING gin(to_tsvector('english', name || ' ' || COALESCE(description, '')))");
+        if (\DB::connection()->getDriverName() === 'pgsql') {
+            // Full-text search index on name and description (PostgreSQL)
+            \DB::statement("CREATE INDEX products_search_idx ON products USING gin(to_tsvector('english', name || ' ' || COALESCE(description, '')))");
 
-        // Enforce non-negative stock at DB level
-        \DB::statement('ALTER TABLE products ADD CONSTRAINT stock_non_negative CHECK (stock >= 0)');
+            // Enforce non-negative stock at DB level
+            \DB::statement('ALTER TABLE products ADD CONSTRAINT stock_non_negative CHECK (stock >= 0)');
+        }
     }
 
     public function down(): void

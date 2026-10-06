@@ -24,8 +24,10 @@ return new class extends Migration
             // Ensure positive quantity
         });
 
-        \DB::statement('ALTER TABLE order_items ADD CONSTRAINT quantity_positive CHECK (quantity > 0)');
-        \DB::statement('ALTER TABLE order_items ADD CONSTRAINT unit_price_positive CHECK (unit_price > 0)');
+        if (\DB::connection()->getDriverName() === 'pgsql') {
+            \DB::statement('ALTER TABLE order_items ADD CONSTRAINT quantity_positive CHECK (quantity > 0)');
+            \DB::statement('ALTER TABLE order_items ADD CONSTRAINT unit_price_positive CHECK (unit_price > 0)');
+        }
     }
 
     public function down(): void

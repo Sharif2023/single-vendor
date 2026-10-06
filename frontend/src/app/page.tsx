@@ -15,7 +15,7 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
   const [page, setPage] = useState(1);
-  const { data, isLoading, isError } = useProducts(page, search, sort);
+  const { data, isLoading, isError, error, refetch } = useProducts(page, search, sort);
   const { addItem, isAdding } = useCart();
 
   const handleAddToCart = (e: React.MouseEvent, productId: number) => {
@@ -86,9 +86,26 @@ export default function Home() {
           </div>
 
           {isError && (
-            <div className="bg-red-50 text-red-700 border border-red-200 p-4 rounded-lg flex items-center gap-3 mb-8">
-              <AlertCircle className="h-5 w-5" />
-              <p className="font-medium text-sm">Failed to load products. Please try again later.</p>
+            <div className="bg-red-50 text-red-700 border border-red-200 p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8 shadow-sm">
+              <div className="flex items-center gap-3">
+                <AlertCircle className="h-5 w-5 text-red-600 shrink-0" />
+                <div>
+                  <p className="font-semibold text-sm">Failed to load products</p>
+                  <p className="text-xs text-red-600 mt-0.5">
+                    {error instanceof Error && error.message.includes("Network Error")
+                      ? "Backend server is offline or unreachable on port 8000."
+                      : "Could not fetch products. Please check your connection and try again."}
+                  </p>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-white hover:bg-red-100 border-red-300 text-red-700 font-medium shrink-0 self-start sm:self-auto"
+                onClick={() => refetch()}
+              >
+                Retry
+              </Button>
             </div>
           )}
 

@@ -34,11 +34,11 @@ Route::middleware('web')->group(function () {
     Route::get('/orders/{id}/payment-status', [PaymentController::class, 'status']);
 });
 
-// SSLCommerz Payment Callbacks (called by SSLCommerz — not authenticated)
-Route::post('/payment/success', [PaymentController::class, 'success']);
-Route::post('/payment/fail', [PaymentController::class, 'fail']);
-Route::post('/payment/cancel', [PaymentController::class, 'cancel']);
-Route::post('/payment/ipn', [PaymentController::class, 'ipn']);
+// SSLCommerz Payment Callbacks (called by SSLCommerz or browser redirect)
+Route::match(['get', 'post'], '/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+Route::match(['get', 'post'], '/payment/fail', [PaymentController::class, 'fail'])->name('payment.fail');
+Route::match(['get', 'post'], '/payment/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+Route::post('/payment/ipn', [PaymentController::class, 'ipn'])->name('payment.ipn');
 
 // ── Authenticated Routes ──────────────────────────────────────────────────────
 

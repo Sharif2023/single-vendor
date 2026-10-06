@@ -11,6 +11,8 @@ export function useProducts(page = 1, search = "", sort = "") {
       });
       return data;
     },
+    retry: 2,
+    staleTime: 60 * 1000,
   });
 }
 
@@ -22,5 +24,7 @@ export function useProduct(id: number | null) {
       return data;
     },
     enabled: !!id,
+    retry: 2,
+    staleTime: 60 * 1000,
   });
 }
