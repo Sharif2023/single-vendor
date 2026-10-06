@@ -189,47 +189,49 @@ export default function Home() {
             </div>
           )}
           {/* PAGINATION */}
-          {!isLoading && data?.meta && data.meta.last_page > 1 && (
-            <div className="flex justify-center items-center gap-2 mt-12">
-              <Button
-                variant="outline"
-                disabled={page === 1}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-              >
-                Previous
-              </Button>
-              <div className="hidden sm:flex gap-1 mx-2">
-                {Array.from({ length: Math.min(5, data.meta.last_page) }).map((_, i) => {
-                  let pageNum = i + 1;
-                  // Simple logic to show a window of pages
-                  if (data.meta.last_page > 5) {
-                    if (page > 3 && page < data.meta.last_page - 1) {
-                      pageNum = page - 2 + i;
-                    } else if (page >= data.meta.last_page - 1) {
-                      pageNum = data.meta.last_page - 4 + i;
+          {!isLoading && (data?.last_page || data?.meta?.last_page) && (data.last_page || data.meta?.last_page || 1) > 1 && (() => {
+            const lastPage = data.last_page || data.meta?.last_page || 1;
+            return (
+              <div className="flex justify-center items-center gap-2 mt-12">
+                <Button
+                  variant="outline"
+                  disabled={page === 1}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                >
+                  Previous
+                </Button>
+                <div className="hidden sm:flex gap-1 mx-2">
+                  {Array.from({ length: Math.min(5, lastPage) }).map((_, i) => {
+                    let pageNum = i + 1;
+                    if (lastPage > 5) {
+                      if (page > 3 && page < lastPage - 1) {
+                        pageNum = page - 2 + i;
+                      } else if (page >= lastPage - 1) {
+                        pageNum = lastPage - 4 + i;
+                      }
                     }
-                  }
-                  return (
-                    <Button
-                      key={pageNum}
-                      variant={page === pageNum ? "default" : "ghost"}
-                      className={`w-10 h-10 p-0 ${page === pageNum ? "" : "text-gray-500"}`}
-                      onClick={() => setPage(pageNum)}
-                    >
-                      {pageNum}
-                    </Button>
-                  );
-                })}
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={page === pageNum ? "default" : "ghost"}
+                        className={`w-10 h-10 p-0 ${page === pageNum ? "" : "text-gray-500"}`}
+                        onClick={() => setPage(pageNum)}
+                      >
+                        {pageNum}
+                      </Button>
+                    );
+                  })}
+                </div>
+                <Button
+                  variant="outline"
+                  disabled={page === lastPage}
+                  onClick={() => setPage((p) => Math.min(lastPage, p + 1))}
+                >
+                  Next
+                </Button>
               </div>
-              <Button
-                variant="outline"
-                disabled={page === data.meta.last_page}
-                onClick={() => setPage((p) => Math.min(data.meta.last_page, p + 1))}
-              >
-                Next
-              </Button>
-            </div>
-          )}
+            );
+          })()}
         </section>
       </main>
 
