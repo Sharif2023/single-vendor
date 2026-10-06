@@ -48,8 +48,10 @@ return [
 
     // ── CarryBee ──────────────────────────────────────────────────────────────
     'carrybee' => [
-        'api_url' => env('CARRYBEE_API_URL', 'https://api.carrybee.com/v1'),
-        'api_key' => env('CARRYBEE_API_KEY'),
+        'api_url'        => env('CARRYBEE_API_URL', 'https://api.carrybee.com/v1'),
+        'client_id'      => env('CARRYBEE_CLIENT_ID'),
+        'client_secret'  => env('CARRYBEE_CLIENT_SECRET'),
+        'client_context' => env('CARRYBEE_CLIENT_CONTEXT'),
     ],
 
 ];

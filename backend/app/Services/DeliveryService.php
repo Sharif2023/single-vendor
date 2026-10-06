@@ -10,12 +10,16 @@ use Illuminate\Support\Facades\Log;
 class DeliveryService
 {
     private string $apiUrl;
-    private string $apiKey;
+    private ?string $clientId;
+    private ?string $clientSecret;
+    private ?string $clientContext;
 
     public function __construct()
     {
-        $this->apiUrl = config('services.carrybee.api_url', 'https://api.carrybee.com/v1');
-        $this->apiKey = config('services.carrybee.api_key', '');
+        $this->apiUrl        = config('services.carrybee.api_url', 'https://api.carrybee.com/v1');
+        $this->clientId      = config('services.carrybee.client_id');
+        $this->clientSecret  = config('services.carrybee.client_secret');
+        $this->clientContext = config('services.carrybee.client_context');
     }
 
     /**
@@ -49,8 +53,10 @@ class DeliveryService
         ];
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->apiKey,
-            'Accept'        => 'application/json',
+            'Client-Id'      => $this->clientId,
+            'Client-Secret'  => $this->clientSecret,
+            'Client-Context' => $this->clientContext,
+            'Accept'         => 'application/json',
         ])
             ->timeout(20)
             ->retry(2, 500) // HTTP-level retry for transient failures
@@ -97,8 +103,10 @@ class DeliveryService
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Accept'        => 'application/json',
+                'Client-Id'      => $this->clientId,
+                'Client-Secret'  => $this->clientSecret,
+                'Client-Context' => $this->clientContext,
+                'Accept'         => 'application/json',
             ])
                 ->timeout(10)
                 ->get("{$this->apiUrl}/parcels/{$delivery->consignment_id}");
