@@ -35,4 +35,21 @@ return [
         ],
     ],
 
+    // ── SSLCommerz ────────────────────────────────────────────────────────────
+    'sslcommerz' => [
+        'store_id'       => env('SSLCOMMERZ_STORE_ID'),
+        'store_password' => env('SSLCOMMERZ_STORE_PASSWORD'),
+        'is_sandbox'     => env('SSLCOMMERZ_SANDBOX', true),
+        'success_url'    => env('SSLCOMMERZ_SUCCESS_URL', env('APP_URL') . '/api/payment/success'),
+        'fail_url'       => env('SSLCOMMERZ_FAIL_URL', env('APP_URL') . '/api/payment/fail'),
+        'cancel_url'     => env('SSLCOMMERZ_CANCEL_URL', env('APP_URL') . '/api/payment/cancel'),
+        'ipn_url'        => env('SSLCOMMERZ_IPN_URL', env('APP_URL') . '/api/payment/ipn'),
+    ],
+
+    // ── CarryBee ──────────────────────────────────────────────────────────────
+    'carrybee' => [
+        'api_url' => env('CARRYBEE_API_URL', 'https://api.carrybee.com/v1'),
+        'api_key' => env('CARRYBEE_API_KEY'),
+    ],
+
 ];
