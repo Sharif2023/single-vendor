@@ -67,123 +67,127 @@ export default function CheckoutPage() {
     <>
       <main className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="mb-6">
-          <Link href="/cart" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary">
+          <Link href="/cart" className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-[#003BE2] transition-colors">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Return to Cart
+            Back to Cart
           </Link>
         </div>
         
-        <h1 className="text-3xl font-bold tracking-tight mb-8">Checkout</h1>
+        <div className="mb-8">
+          <h1 className="font-display text-3xl font-extrabold tracking-tight text-gray-900">Checkout</h1>
+          <p className="text-gray-500 text-sm mt-1">Provide your delivery details to complete your order securely.</p>
+        </div>
 
         <form onSubmit={handleSubmit} className="grid md:grid-cols-3 gap-8">
           <div className="md:col-span-2 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Shipping & Contact Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Full Name *</Label>
-                    <Input 
-                      id="name" 
-                      required 
-                      placeholder="John Doe"
-                      value={formData.customer_name}
-                      onChange={(e) => setFormData({...formData, customer_name: e.target.value})}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number *</Label>
-                    <Input 
-                      id="phone" 
-                      required 
-                      placeholder="01XXXXXXXXX"
-                      value={formData.customer_phone}
-                      onChange={(e) => setFormData({...formData, customer_phone: e.target.value})}
-                    />
-                  </div>
-                </div>
-                
+            <div className="bg-white rounded-[28px] border border-gray-100 p-6 sm:p-8 shadow-sm space-y-6">
+              <h2 className="font-display text-xl font-bold text-gray-900 border-b border-gray-100 pb-3">
+                Shipping & Contact Details
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email Address *</Label>
+                  <Label htmlFor="name" className="text-xs font-semibold text-gray-700">Full Name *</Label>
                   <Input 
-                    id="email" 
-                    type="email" 
+                    id="name" 
                     required 
-                    placeholder="john@example.com"
-                    value={formData.customer_email}
-                    onChange={(e) => setFormData({...formData, customer_email: e.target.value})}
+                    placeholder="John Doe"
+                    className="rounded-full h-11 border-gray-200 focus:border-[#003BE2] px-4"
+                    value={formData.customer_name}
+                    onChange={(e) => setFormData({...formData, customer_name: e.target.value})}
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="text-xs font-semibold text-gray-700">Phone Number *</Label>
+                  <Input 
+                    id="phone" 
+                    required 
+                    placeholder="01XXXXXXXXX"
+                    className="rounded-full h-11 border-gray-200 focus:border-[#003BE2] px-4"
+                    value={formData.customer_phone}
+                    onChange={(e) => setFormData({...formData, customer_phone: e.target.value})}
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-xs font-semibold text-gray-700">Email Address *</Label>
+                <Input 
+                  id="email" 
+                  type="email" 
+                  required 
+                  placeholder="john@example.com"
+                  className="rounded-full h-11 border-gray-200 focus:border-[#003BE2] px-4"
+                  value={formData.customer_email}
+                  onChange={(e) => setFormData({...formData, customer_email: e.target.value})}
+                />
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="address">Full Delivery Address *</Label>
-                  <Input 
-                    id="address" 
-                    required 
-                    placeholder="House, Road, Area, City"
-                    value={formData.customer_address}
-                    onChange={(e) => setFormData({...formData, customer_address: e.target.value})}
-                  />
-                </div>
-              </CardContent>
-            </Card>
+              <div className="space-y-2">
+                <Label htmlFor="address" className="text-xs font-semibold text-gray-700">Full Delivery Address *</Label>
+                <Input 
+                  id="address" 
+                  required 
+                  placeholder="House, Road, Area, City"
+                  className="rounded-2xl h-12 border-gray-200 focus:border-[#003BE2] px-4"
+                  value={formData.customer_address}
+                  onChange={(e) => setFormData({...formData, customer_address: e.target.value})}
+                />
+              </div>
+            </div>
           </div>
 
           <div className="md:col-span-1">
-            <Card className="sticky top-24">
-              <CardHeader>
-                <CardTitle>Order Summary</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="max-h-60 overflow-y-auto space-y-3 pr-2">
-                  {cart.items.map(item => (
-                    <div key={item.product_id} className="flex justify-between text-sm">
-                      <div className="flex gap-2">
-                        <span className="font-medium">{item.quantity}x</span>
-                        <span className="line-clamp-1">{item.name}</span>
-                      </div>
-                      <span className="font-medium whitespace-nowrap ml-4">
-                        ৳{item.subtotal.toFixed(2)}
-                      </span>
+            <div className="bg-white rounded-[28px] border border-gray-100 p-6 shadow-sm sticky top-24 space-y-5">
+              <h2 className="font-display font-bold text-xl text-gray-900 pb-3 border-b border-gray-100">
+                Order Summary
+              </h2>
+              <div className="max-h-60 overflow-y-auto space-y-3 pr-1 text-sm">
+                {cart.items.map(item => (
+                  <div key={item.product_id} className="flex justify-between items-center text-sm">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">{item.quantity}x</span>
+                      <span className="line-clamp-1 text-gray-800">{item.name}</span>
                     </div>
-                  ))}
-                </div>
-                
-                <Separator />
-                
-                <div className="flex justify-between text-muted-foreground">
+                    <span className="font-semibold text-gray-900 whitespace-nowrap ml-3">
+                      ৳{item.subtotal.toFixed(2)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="space-y-2.5 pt-3 border-t border-gray-100 text-sm">
+                <div className="flex justify-between text-gray-600">
                   <span>Subtotal</span>
-                  <span>৳{cart.subtotal.toFixed(2)}</span>
+                  <span className="font-medium text-gray-900">৳{cart.subtotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-muted-foreground">
+                <div className="flex justify-between text-gray-600">
                   <span>Shipping</span>
-                  <span>Free</span>
+                  <span className="text-emerald-600 font-medium">Free</span>
                 </div>
-                
-                <Separator />
-                
-                <div className="flex justify-between font-bold text-lg">
+                <div className="pt-3 border-t border-gray-100 flex justify-between font-display text-lg font-bold text-gray-900">
                   <span>Total</span>
-                  <span>৳{cart.total.toFixed(2)}</span>
+                  <span className="text-[#003BE2]">৳{cart.total.toFixed(2)}</span>
                 </div>
-              </CardContent>
-              <CardFooter className="flex-col items-stretch gap-4">
-                <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
-                  {isLoading ? (
-                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
-                  ) : (
-                    "Place Order & Pay"
-                  )}
-                </Button>
-                
-                <div className="flex items-center justify-center text-xs text-muted-foreground">
-                  <ShieldCheck className="mr-1 h-3 w-3" />
-                  Secure payment powered by SSLCommerz
-                </div>
-              </CardFooter>
-            </Card>
+              </div>
+
+              <Button 
+                type="submit" 
+                size="lg" 
+                className="w-full h-12 rounded-full bg-[#003BE2] hover:bg-blue-700 text-white font-display font-semibold shadow-md shadow-blue-500/25" 
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
+                ) : (
+                  "Place Order & Pay"
+                )}
+              </Button>
+              
+              <div className="flex items-center justify-center text-xs text-gray-400 gap-1.5">
+                <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                Secure payment powered by SSLCommerz
+              </div>
+            </div>
           </div>
         </form>
       </main>

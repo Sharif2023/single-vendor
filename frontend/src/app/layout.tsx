@@ -1,15 +1,27 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans, Poppins } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import StorefrontLayout from "@/components/StorefrontLayout";
 import { Toaster } from "@/components/ui/sonner";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Store | Premium E-commerce",
-  description: "A premium e-commerce experience",
+  description: "A premium modern e-commerce experience",
   icons: {
     icon: "/favicon.ico",
   },
@@ -21,8 +33,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
-      <body className="font-sans min-h-screen bg-background text-foreground flex flex-col antialiased selection:bg-black selection:text-white" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${jakarta.variable} ${poppins.variable}`}
+      suppressHydrationWarning
+    >
+      <body
+        className="font-sans min-h-screen bg-background text-foreground flex flex-col antialiased selection:bg-[#D6FD04] selection:text-black"
+        suppressHydrationWarning
+      >
         <Providers>
           <StorefrontLayout>{children}</StorefrontLayout>
         </Providers>
