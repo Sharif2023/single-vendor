@@ -1,7 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { useProducts } from "@/hooks/useProducts";
 import { useCart } from "@/hooks/useCart";
 import { Button } from "@/components/ui/button";
@@ -33,7 +31,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50/50">
-      <Navbar />
       <main className="flex-1 w-full">
         {/* HERO SECTION */}
         <section className="w-full bg-white border-b py-16 px-6">
@@ -237,7 +234,6 @@ export default function Home() {
       </main>
 
       {/* FOOTER */}
-      <Footer />
     </div>
   );
 }

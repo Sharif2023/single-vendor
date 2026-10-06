@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { XCircle, RefreshCcw } from "lucide-react";
@@ -59,7 +58,6 @@ function FailedContent() {
 export default function PaymentFailedPage() {
   return (
     <>
-      <Navbar />
       <Suspense fallback={<div className="h-screen flex items-center justify-center">Loading...</div>}>
         <FailedContent />
       </Suspense>

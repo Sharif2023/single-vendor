@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle2, ArrowRight } from "lucide-react";
@@ -57,7 +56,6 @@ function SuccessContent() {
 export default function PaymentSuccessPage() {
   return (
     <>
-      <Navbar />
       <Suspense fallback={<div className="h-screen flex items-center justify-center">Loading...</div>}>
         <SuccessContent />
       </Suspense>

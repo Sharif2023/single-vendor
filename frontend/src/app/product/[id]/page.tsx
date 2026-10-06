@@ -1,8 +1,6 @@
 "use client";
 
 import { use, useState } from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { useProduct, useProducts } from "@/hooks/useProducts";
 import { useCart } from "@/hooks/useCart";
 import { Button } from "@/components/ui/button";
@@ -35,7 +33,6 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
   return (
     <>
-      <Navbar />
       <main className="flex-1 flex flex-col w-full bg-white">
         
         {/* PRODUCT DETAILS SECTION */}
@@ -245,7 +242,6 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
           </div>
         </section>
       </main>
-      <Footer />
     </>
   );
 }

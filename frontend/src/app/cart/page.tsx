@@ -1,7 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { useCart } from "@/hooks/useCart";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,7 +31,6 @@ export default function CartPage() {
   if (cartQuery.isLoading) {
     return (
       <>
-        <Navbar />
         <main className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold tracking-tight mb-8">Shopping Cart</h1>
           <div className="h-64 flex items-center justify-center text-muted-foreground">
@@ -46,7 +43,6 @@ export default function CartPage() {
 
   return (
     <>
-      <Navbar />
       <main className="container mx-auto px-4 py-8 max-w-5xl">
         <h1 className="text-3xl font-bold tracking-tight mb-8">Shopping Cart</h1>
 
@@ -158,7 +154,6 @@ export default function CartPage() {
           </div>
         )}
       </main>
-      <Footer />
     </>
   );
 }

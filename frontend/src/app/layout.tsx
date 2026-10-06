@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
+import StorefrontLayout from "@/components/StorefrontLayout";
 import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -22,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <body className="font-sans min-h-screen bg-background text-foreground flex flex-col antialiased selection:bg-black selection:text-white" suppressHydrationWarning>
-        <Providers>{children}</Providers>
+        <Providers>
+          <StorefrontLayout>{children}</StorefrontLayout>
+        </Providers>
         <Toaster position="top-center" closeButton duration={3000} />
       </body>
     </html>

@@ -1,7 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { useCart } from "@/hooks/useCart";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -67,7 +65,6 @@ export default function CheckoutPage() {
 
   return (
     <>
-      <Navbar />
       <main className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="mb-6">
           <Link href="/cart" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary">
@@ -190,7 +187,6 @@ export default function CheckoutPage() {
           </div>
         </form>
       </main>
-      <Footer />
     </>
   );
 }
