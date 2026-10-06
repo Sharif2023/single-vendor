@@ -1,2 +1,7 @@
-
 Task.md
+workflow.md
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+backend/vendor/
+backend/.env
