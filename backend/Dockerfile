@@ -27,5 +27,5 @@ RUN chmod -R 777 storage bootstrap/cache
 # Render automatically binds to the PORT environment variable (default 10000)
 EXPOSE 10000
 
-# Start script: link storage and start server
-CMD php artisan storage:link --quiet; php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
+# Start script: link storage, start queue worker in background, and start server
+CMD php artisan storage:link --quiet && php artisan queue:work --tries=3 & php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
