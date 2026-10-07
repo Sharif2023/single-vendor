@@ -736,9 +736,9 @@ function AdminProductsContent() {
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="price" className="text-xs font-semibold whitespace-nowrap text-gray-700">
+                <Label htmlFor="price" className="text-xs font-semibold text-gray-700">
                   Price (৳) <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -752,7 +752,7 @@ function AdminProductsContent() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="discount_price" className="text-xs font-semibold whitespace-nowrap text-gray-700">
+                <Label htmlFor="discount_price" className="text-xs font-semibold text-gray-700">
                   Discount Price (৳)
                 </Label>
                 <Input
@@ -765,7 +765,7 @@ function AdminProductsContent() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="stock" className="text-xs font-semibold whitespace-nowrap text-gray-700">
+                <Label htmlFor="stock" className="text-xs font-semibold text-gray-700">
                   Stock Quantity <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -778,7 +778,7 @@ function AdminProductsContent() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="status" className="text-xs font-semibold whitespace-nowrap text-gray-700">
+                <Label htmlFor="status" className="text-xs font-semibold text-gray-700">
                   Status <span className="text-red-500">*</span>
                 </Label>
                 <select

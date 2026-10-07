@@ -82,11 +82,3 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/settings', [AdminSettingsController::class, 'update']);
     });
 });
-
-Route::get('/debug-logs', function () {
-    $path = storage_path('logs/laravel.log');
-    if (file_exists($path)) {
-        return response()->file($path);
-    }
-    return 'No log file found';
-});
