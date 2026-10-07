@@ -15,6 +15,7 @@ class ProductResource extends JsonResource
             'sku'         => $this->sku,
             'description' => $this->description,
             'price'       => (float) $this->price,
+            'discount_price' => $this->discount_price !== null ? (float) $this->discount_price : null,
             'stock'       => $this->stock,
             'status'      => $this->status,
             'image_url'   => $this->image_url,

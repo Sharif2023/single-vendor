@@ -14,6 +14,7 @@ export interface Product {
   sku: string;
   description: string | null;
   price: number;
+  discount_price?: number | null;
   stock: number;
   status: "active" | "inactive";
   image_url?: string | null;

@@ -124,7 +124,9 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
     }
   };
 
-  const originalPrice = product ? (product.price * 1.18).toFixed(2) : "0";
+  const currentPrice = product?.discount_price ? product.discount_price : product?.price || 0;
+  const originalPrice = product?.discount_price ? product.price : null;
+  const discountPercent = product?.discount_price ? Math.round(((product.price - product.discount_price) / product.price) * 100) : 0;
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] text-gray-900 font-body">
@@ -602,25 +604,29 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                 <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100 space-y-2">
                   <div className="flex items-baseline gap-3">
                     <span className="font-display text-3xl sm:text-4xl font-extrabold text-gray-900">
-                      ৳{(product.price * quantity).toFixed(2)}
+                      ৳{(currentPrice * quantity).toFixed(2)}
                     </span>
-                    <span className="text-sm font-medium text-gray-400 line-through">
-                      ৳{(product.price * 1.18 * quantity).toFixed(2)}
-                    </span>
-                    <span className="text-xs font-bold bg-[#D6FD04] text-black px-2 py-0.5 rounded-full ml-auto">
-                      18% OFF
-                    </span>
+                    {originalPrice && (
+                      <>
+                        <span className="text-sm font-medium text-gray-400 line-through">
+                          ৳{(originalPrice * quantity).toFixed(2)}
+                        </span>
+                        <span className="text-xs font-bold bg-[#D6FD04] text-black px-2 py-0.5 rounded-full ml-auto">
+                          {discountPercent}% OFF
+                        </span>
+                      </>
+                    )}
                   </div>
 
                   {quantity > 1 ? (
                     <div className="text-xs text-gray-600 font-medium flex items-center justify-between pt-1 border-t border-gray-200/60">
-                      <span>৳{product.price.toFixed(2)} × {quantity} items</span>
-                      <span className="font-bold text-gray-900">Total: ৳{(product.price * quantity).toFixed(2)}</span>
+                      <span>৳{currentPrice.toFixed(2)} × {quantity} items</span>
+                      <span className="font-bold text-gray-900">Total: ৳{(currentPrice * quantity).toFixed(2)}</span>
                     </div>
                   ) : (
                     <p className="text-[11px] text-gray-500 mt-1 flex items-center gap-1">
                       <Zap className="w-3 h-3 text-amber-500 fill-amber-500" />
-                      Special promotional pricing applied for a limited time.
+                      {originalPrice ? "Special promotional pricing applied." : "Best price guaranteed."}
                     </p>
                   )}
                 </div>
@@ -673,7 +679,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                         Order Subtotal ({quantity} {quantity > 1 ? "items" : "item"}):
                       </span>
                       <span className="font-display font-bold text-sm text-[#003BE2]">
-                        ৳{(product.price * quantity).toFixed(2)}
+                        ৳{(currentPrice * quantity).toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -690,7 +696,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                         onClick={() => handleAddToCart(false)}
                       >
                         <ShoppingBag className="w-5 h-5 mr-2" />
-                        {isAdding ? "Adding..." : `Add to Cart • ৳${(product.price * quantity).toFixed(2)}`}
+                        {isAdding ? "Adding..." : `Add to Cart • ৳${(currentPrice * quantity).toFixed(2)}`}
                       </Button>
 
                       <Button

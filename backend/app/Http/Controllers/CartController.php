@@ -134,14 +134,15 @@ class CartController extends Controller
                 continue; // Product deleted/deactivated — skip silently
             }
 
-            $lineSubtotal = round($product->price * $quantity, 2);
+            $currentPrice = $product->discount_price !== null ? $product->discount_price : $product->price;
+            $lineSubtotal = round($currentPrice * $quantity, 2);
             $subtotal    += $lineSubtotal;
 
             $items[] = [
                 'product_id' => $product->id,
                 'name'       => $product->name,
                 'sku'        => $product->sku,
-                'price'      => (float) $product->price,
+                'price'      => (float) $currentPrice,
                 'quantity'   => $quantity,
                 'subtotal'   => $lineSubtotal,
                 'in_stock'   => $product->stock >= $quantity,

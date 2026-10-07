@@ -259,8 +259,13 @@ export default function Home() {
                     <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
                       <div className="flex flex-col">
                         <span className="font-display font-bold text-lg text-gray-900">
-                          ৳{product.price.toFixed(2)}
+                          ৳{(product.discount_price ?? product.price).toFixed(2)}
                         </span>
+                        {product.discount_price && (
+                          <span className="text-xs text-gray-400 line-through">
+                            ৳{product.price.toFixed(2)}
+                          </span>
+                        )}
                       </div>
 
                       {product.in_stock && (

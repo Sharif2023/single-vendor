@@ -48,13 +48,14 @@ class OrderService
                 // Deduct stock atomically
                 $product->decrement('stock', $item['quantity']);
 
-                $lineSubtotal = $product->price * $item['quantity'];
+                $currentPrice = $product->discount_price !== null ? $product->discount_price : $product->price;
+                $lineSubtotal = $currentPrice * $item['quantity'];
                 $subtotal    += $lineSubtotal;
 
                 $orderLines[] = [
                     'product_id' => $product->id,
                     'quantity'   => $item['quantity'],
-                    'unit_price' => $product->price, // Price snapshot
+                    'unit_price' => $currentPrice, // Price snapshot
                     'subtotal'   => $lineSubtotal,
                 ];
             }

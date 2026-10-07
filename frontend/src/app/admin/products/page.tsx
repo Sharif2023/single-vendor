@@ -98,6 +98,7 @@ function AdminProductsContent() {
     sku: "",
     description: "",
     price: 0,
+    discount_price: "" as number | string,
     stock: 0,
     status: "active" as "active" | "inactive",
     image_url: "",
@@ -230,6 +231,7 @@ function AdminProductsContent() {
         sku: product.sku,
         description: product.description || "",
         price: product.price,
+        discount_price: product.discount_price ?? "",
         stock: product.stock,
         status: product.status as "active" | "inactive",
         image_url: product.image_url || "",
@@ -242,6 +244,7 @@ function AdminProductsContent() {
         sku: "",
         description: "",
         price: 0,
+        discount_price: "",
         stock: 0,
         status: "active",
         image_url: "",
@@ -287,6 +290,11 @@ function AdminProductsContent() {
     payload.append("sku", formData.sku);
     if (formData.description) payload.append("description", formData.description);
     payload.append("price", formData.price.toString());
+    if (formData.discount_price !== "") {
+      payload.append("discount_price", formData.discount_price.toString());
+    } else {
+      payload.append("discount_price", "");
+    }
     payload.append("stock", formData.stock.toString());
     payload.append("status", formData.status);
     
@@ -521,7 +529,12 @@ function AdminProductsContent() {
                       {product.name}
                     </TableCell>
                     <TableCell className="font-semibold text-slate-900 text-sm">
-                      ৳{Number(product.price).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                      ৳{Number(product.discount_price ?? product.price).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                      {product.discount_price && (
+                        <div className="text-[10px] text-gray-400 line-through">
+                          ৳{Number(product.price).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell>
                       <button
@@ -723,7 +736,7 @@ function AdminProductsContent() {
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="price" className="text-xs font-semibold whitespace-nowrap text-gray-700">
                   Price (৳) <span className="text-red-500">*</span>
@@ -736,6 +749,19 @@ function AdminProductsContent() {
                   required
                   value={formData.price}
                   onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="discount_price" className="text-xs font-semibold whitespace-nowrap text-gray-700">
+                  Discount Price (৳)
+                </Label>
+                <Input
+                  id="discount_price"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={formData.discount_price}
+                  onChange={(e) => setFormData({ ...formData, discount_price: e.target.value ? parseFloat(e.target.value) : "" })}
                 />
               </div>
               <div className="space-y-2">
