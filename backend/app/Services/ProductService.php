@@ -37,7 +37,13 @@ class ProductService
             $query->search($search);
         }
 
-        return $query->paginate($perPage, ['*'], 'page', $page);
+        $cacheKey = 'products:list:' . md5(json_encode([$search, $perPage, $page, $sort]));
+
+        if (Cache::supportsTags()) {
+            return Cache::tags(['products'])->remember($cacheKey, self::CACHE_LIST_TTL, fn () => $query->paginate($perPage, ['*'], 'page', $page));
+        }
+
+        return Cache::remember($cacheKey, self::CACHE_LIST_TTL, fn () => $query->paginate($perPage, ['*'], 'page', $page));
     }
 
     /**
@@ -45,7 +51,13 @@ class ProductService
      */
     public function findPublic(int $id): ?Product
     {
-        return Product::with('images')->active()->find($id);
+        $cacheKey = "products:detail:{$id}";
+
+        if (Cache::supportsTags()) {
+            return Cache::tags(['products'])->remember($cacheKey, self::CACHE_DETAIL_TTL, fn () => Product::with('images')->active()->find($id));
+        }
+
+        return Cache::remember($cacheKey, self::CACHE_DETAIL_TTL, fn () => Product::with('images')->active()->find($id));
     }
 
     /**
