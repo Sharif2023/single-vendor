@@ -90,8 +90,8 @@ class AdminProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $data['image_url'] = url('storage/' . $path);
+            $path = $request->file('image')->store('products');
+            $data['image_url'] = \Illuminate\Support\Facades\Storage::url($path);
         }
 
         $product = $this->productService->create($data);
@@ -100,9 +100,9 @@ class AdminProductController extends Controller
             $order = 1;
             foreach ($request->file('sub_images') as $file) {
                 if ($order > 5) break;
-                $subPath = $file->store('products', 'public');
+                $subPath = $file->store('products');
                 $product->images()->create([
-                    'image_url'  => url('storage/' . $subPath),
+                    'image_url'  => \Illuminate\Support\Facades\Storage::url($subPath),
                     'order'      => $order++,
                     'is_primary' => false,
                 ]);
@@ -151,8 +151,8 @@ class AdminProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $data['image_url'] = url('storage/' . $path);
+            $path = $request->file('image')->store('products');
+            $data['image_url'] = \Illuminate\Support\Facades\Storage::url($path);
         }
 
         if (!empty($data['delete_image_ids'])) {
@@ -167,9 +167,9 @@ class AdminProductController extends Controller
             $order = $currentCount + 1;
             $files = array_slice($request->file('sub_images'), 0, $maxAllowed);
             foreach ($files as $file) {
-                $subPath = $file->store('products', 'public');
+                $subPath = $file->store('products');
                 $product->images()->create([
-                    'image_url'  => url('storage/' . $subPath),
+                    'image_url'  => \Illuminate\Support\Facades\Storage::url($subPath),
                     'order'      => $order++,
                     'is_primary' => false,
                 ]);
