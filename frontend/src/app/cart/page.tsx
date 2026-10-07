@@ -9,17 +9,8 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 export default function CartPage() {
-  const { cartQuery, updateItem, removeItem, clearCart } = useCart();
+  const { cartQuery, stepQuantity, flushUpdates, removeItem, clearCart } = useCart();
   const cart = cartQuery.data;
-
-  const handleUpdate = (productId: number, newQty: number) => {
-    updateItem(
-      { productId, quantity: newQty },
-      {
-        onError: () => toast.error("Failed to update cart"),
-      }
-    );
-  };
 
   const handleRemove = (productId: number) => {
     removeItem(productId, {
@@ -72,7 +63,7 @@ export default function CartPage() {
                 <div key={item.product_id} className="bg-white rounded-[24px] border border-gray-100 p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row gap-5 items-center">
                   <div className="w-24 h-24 rounded-2xl bg-gray-50 border border-gray-100 flex-shrink-0 flex items-center justify-center p-2">
                     <img 
-                      src={`https://picsum.photos/seed/${item.product_id}/200/200`} 
+                      src={item.image_url || `https://picsum.photos/seed/${item.product_id}/200/200`} 
                       alt={item.name}
                       className="w-full h-full object-contain"
                     />
@@ -97,20 +88,20 @@ export default function CartPage() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-7 w-7 rounded-full text-gray-600 hover:bg-white"
-                          onClick={() => handleUpdate(item.product_id, item.quantity - 1)}
+                          className="h-7 w-7 rounded-full text-gray-600 hover:bg-white active:scale-90 transition-transform cursor-pointer"
+                          onClick={() => stepQuantity(item.product_id, -1, { onError: () => toast.error("Failed to update cart") })}
                           disabled={item.quantity <= 1}
                         >
                           <Minus className="h-3 w-3" />
                         </Button>
-                        <span className="w-10 text-center text-sm font-bold text-gray-900">
+                        <span className="w-10 text-center text-sm font-bold text-gray-900 select-none">
                           {item.quantity}
                         </span>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-7 w-7 rounded-full text-gray-600 hover:bg-white"
-                          onClick={() => handleUpdate(item.product_id, item.quantity + 1)}
+                          className="h-7 w-7 rounded-full text-gray-600 hover:bg-white active:scale-90 transition-transform cursor-pointer"
+                          onClick={() => stepQuantity(item.product_id, 1, { onError: () => toast.error("Failed to update cart") })}
                           disabled={item.quantity >= item.stock}
                         >
                           <Plus className="h-3 w-3" />
@@ -119,7 +110,7 @@ export default function CartPage() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full h-8 w-8"
+                        className="text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full h-8 w-8 cursor-pointer"
                         onClick={() => handleRemove(item.product_id)}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -164,7 +155,7 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                <Link href="/checkout" className="block w-full">
+                <Link href="/checkout" onClick={() => flushUpdates()} className="block w-full">
                   <Button className="w-full h-12 rounded-full bg-[#003BE2] hover:bg-blue-700 text-white font-display font-semibold shadow-md shadow-blue-500/25">
                     Proceed to Checkout <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>

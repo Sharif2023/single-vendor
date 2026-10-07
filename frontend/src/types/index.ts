@@ -32,6 +32,7 @@ export interface CartItem {
   subtotal: number;
   in_stock: boolean;
   stock: number;
+  image_url?: string;
 }
 
 export interface Cart {

@@ -146,6 +146,7 @@ class CartController extends Controller
                 'subtotal'   => $lineSubtotal,
                 'in_stock'   => $product->stock >= $quantity,
                 'stock'      => $product->stock,
+                'image_url'  => $product->image_url,
             ];
         }
 
