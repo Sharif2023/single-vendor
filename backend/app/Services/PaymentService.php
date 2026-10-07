@@ -78,7 +78,8 @@ class PaymentService
 
         if (($data['status'] ?? '') !== 'SUCCESS') {
             Log::error('SSLCommerz initiation failed', ['response' => $data]);
-            throw new \RuntimeException('Payment gateway rejected the request.');
+            $failedReason = $data['failedreason'] ?? $data['errorReason'] ?? json_encode($data);
+            throw new \RuntimeException('SSLCommerz rejected the request: ' . $failedReason);
         }
 
         // Create/update payment record in pending state
