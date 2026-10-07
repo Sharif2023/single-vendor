@@ -59,6 +59,20 @@ class ProductFactory extends Factory
         ];
     }
 
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Product $product) {
+            $product->images()->create([
+                'image_url'  => 'https://picsum.photos/seed/' . $product->id . '/600/600',
+                'order'      => 0,
+                'is_primary' => true,
+            ]);
+            
+            // Re-fetch to load the new image relation if needed later in the seeder
+            $product->load('images');
+        });
+    }
+
     public function active(): static
     {
         return $this->state(['status' => 'active', 'stock' => $this->faker->numberBetween(10, 300)]);
