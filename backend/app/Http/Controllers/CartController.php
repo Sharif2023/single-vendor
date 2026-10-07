@@ -26,8 +26,12 @@ class CartController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $cart = $this->getCart($request);
-        return response()->json($this->enrichCart($cart));
+        try {
+            $cart = $this->getCart($request);
+            return response()->json($this->enrichCart($cart));
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()], 500);
+        }
     }
 
     /**
@@ -36,24 +40,28 @@ class CartController extends Controller
      */
     public function addItem(Request $request): JsonResponse
     {
-        $data = $request->validate([
-            'product_id' => 'required|integer|exists:products,id',
-            'quantity'   => 'required|integer|min:1|max:100',
-        ]);
+        try {
+            $data = $request->validate([
+                'product_id' => 'required|integer|exists:products,id',
+                'quantity'   => 'required|integer|min:1|max:100',
+            ]);
 
-        $cart = $this->getCart($request);
-        $pid  = $data['product_id'];
+            $cart = $this->getCart($request);
+            $pid  = $data['product_id'];
 
-        // If product already in cart, merge quantity
-        if (isset($cart[$pid])) {
-            $cart[$pid] = min($cart[$pid] + $data['quantity'], 100);
-        } else {
-            $cart[$pid] = $data['quantity'];
+            // If product already in cart, merge quantity
+            if (isset($cart[$pid])) {
+                $cart[$pid] = min($cart[$pid] + $data['quantity'], 100);
+            } else {
+                $cart[$pid] = $data['quantity'];
+            }
+
+            $request->session()->put(self::SESSION_KEY, $cart);
+
+            return response()->json($this->enrichCart($cart));
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()], 500);
         }
-
-        $request->session()->put(self::SESSION_KEY, $cart);
-
-        return response()->json($this->enrichCart($cart));
     }
 
     /**
@@ -106,7 +114,8 @@ class CartController extends Controller
 
     private function getCart(Request $request): array
     {
-        return $request->session()->get(self::SESSION_KEY, []);
+        $cart = $request->session()->get(self::SESSION_KEY, []);
+        return is_array($cart) ? $cart : [];
     }
 
     /**
