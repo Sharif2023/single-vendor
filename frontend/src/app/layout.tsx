@@ -20,10 +20,16 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Store | Premium E-commerce",
+  title: "Store | Premium E-Commerce",
   description: "A premium modern e-commerce experience",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "32x32" },
+    ],
+    apple: [
+      { url: "/apple-icon.svg", type: "image/svg+xml" },
+    ],
   },
 };
 

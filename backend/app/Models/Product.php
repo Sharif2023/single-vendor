@@ -33,6 +33,11 @@ class Product extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('order')->orderBy('id');
+    }
+
     // ─── Scopes ─────────────────────────────────────────────────────────────────
 
     public function scopeActive($query)

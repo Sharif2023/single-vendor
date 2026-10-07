@@ -31,6 +31,7 @@ class PaymentController extends Controller
             if ($order && $order->status === Order::STATUS_PENDING) {
                 $order->update(['status' => Order::STATUS_PAID]);
                 Payment::where('order_id', $orderId)->update(['status' => Payment::STATUS_PAID]);
+                event(new \App\Events\OrderPaid($order));
             }
         }
 

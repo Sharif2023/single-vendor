@@ -1,5 +1,13 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+export interface ProductImage {
+  id: number;
+  product_id?: number;
+  image_url: string;
+  order?: number;
+  is_primary?: boolean;
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -9,6 +17,7 @@ export interface Product {
   stock: number;
   status: "active" | "inactive";
   image_url?: string | null;
+  images?: ProductImage[];
   in_stock: boolean;
   created_at: string;
   updated_at: string;

@@ -55,7 +55,12 @@ export default function CheckoutPage() {
   };
 
   if (cartQuery.isLoading) {
-    return <div className="h-screen flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="h-screen flex flex-col items-center justify-center gap-4 bg-gray-50/50">
+        <span className="loader"></span>
+        <p className="text-sm font-medium text-gray-500 animate-pulse tracking-wide">Loading checkout...</p>
+      </div>
+    );
   }
 
   if (!cart || cart.items.length === 0) {
@@ -177,7 +182,7 @@ export default function CheckoutPage() {
                 disabled={isLoading}
               >
                 {isLoading ? (
-                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
+                  <><span className="loader mr-2" style={{ "--color-1": "#ffffff", "--size": "0.38px" } as React.CSSProperties}></span> Processing...</>
                 ) : (
                   "Place Order & Pay"
                 )}

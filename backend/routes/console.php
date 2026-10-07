@@ -61,3 +61,22 @@ Schedule::call(function () {
         }
     }
 })->dailyAt('02:00')->name('cancel-abandoned-orders')->withoutOverlapping();
+
+Artisan::command('carrybee:dispatch {orderId}', function ($orderId) {
+    $order = Order::find($orderId);
+    if (! $order) {
+        $this->error("Order {$orderId} not found.");
+        return 1;
+    }
+    $this->info("Dispatching Order {$orderId} to CarryBee...");
+    try {
+        $delivery = app(DeliveryService::class)->dispatch($order);
+        $this->info("SUCCESS! Consignment ID: " . $delivery->consignment_id . " | Status: " . $delivery->status);
+        $this->line(json_encode($delivery->api_response, JSON_PRETTY_PRINT));
+        return 0;
+    } catch (\Throwable $e) {
+        $this->error("ERROR: " . $e->getMessage());
+        return 1;
+    }
+})->purpose('Manually test CarryBee delivery dispatch for an order');
+

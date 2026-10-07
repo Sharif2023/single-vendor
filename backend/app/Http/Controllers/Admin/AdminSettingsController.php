@@ -16,9 +16,11 @@ class AdminSettingsController extends Controller
         'sslcommerz_store_password',
         'sslcommerz_is_sandbox',
         'carrybee_api_key',
+        'carrybee_store_id',
         'store_name',
         'store_email',
         'store_phone',
+        'store_address',
     ];
 
     /**
@@ -29,10 +31,11 @@ class AdminSettingsController extends Controller
     {
         $settings = Setting::whereIn('key', self::ALLOWED_KEYS)->get()
             ->map(fn ($s) => [
+                'id'          => $s->id,
                 'key'         => $s->key,
                 'value'       => $s->type === 'boolean' ? filter_var($s->value, FILTER_VALIDATE_BOOLEAN) : $s->value,
                 'type'        => $s->type,
-                'description' => $s->description,
+                'description' => $s->description ?: ucwords(str_replace('_', ' ', $s->key)),
             ]);
 
         return response()->json($settings);
@@ -44,23 +47,34 @@ class AdminSettingsController extends Controller
      */
     public function update(Request $request): JsonResponse
     {
-        $data = $request->validate([
-            'settings'           => 'required|array',
-            'settings.*.key'     => 'required|string|in:' . implode(',', self::ALLOWED_KEYS),
-            'settings.*.value'   => 'required',
-        ]);
+        $rawSettings = $request->input('settings', $request->all());
 
-        foreach ($data['settings'] as $setting) {
-            $type = $this->inferType($setting['key']);
-            Setting::set($setting['key'], $setting['value'], $type);
+        if (is_array($rawSettings)) {
+            // Case 1: List of items [{ key: 'store_name', value: '...' }]
+            if (isset($rawSettings[0]) && is_array($rawSettings[0]) && isset($rawSettings[0]['key'])) {
+                foreach ($rawSettings as $item) {
+                    if (in_array($item['key'], self::ALLOWED_KEYS, true)) {
+                        $type = $this->inferType($item['key']);
+                        Setting::set($item['key'], $item['value'] ?? '', $type);
+                    }
+                }
+            } else {
+                // Case 2: Key-value map { store_name: '...', ... }
+                foreach ($rawSettings as $key => $value) {
+                    if (in_array($key, self::ALLOWED_KEYS, true)) {
+                        $type = $this->inferType($key);
+                        Setting::set($key, $value ?? '', $type);
+                    }
+                }
+            }
         }
 
-        return response()->json(['message' => 'Settings updated.']);
+        return response()->json(['message' => 'Settings updated successfully.']);
     }
 
     private function inferType(string $key): string
     {
         $booleans = ['payment_enabled', 'sslcommerz_is_sandbox'];
-        return in_array($key, $booleans) ? 'boolean' : 'string';
+        return in_array($key, $booleans, true) ? 'boolean' : 'string';
     }
 }

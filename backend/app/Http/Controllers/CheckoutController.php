@@ -43,6 +43,12 @@ class CheckoutController extends Controller
             ], 422);
         }
 
+        if (! \App\Models\Setting::get('payment_enabled', true)) {
+            return response()->json([
+                'message' => 'Online payment processing is currently disabled by administrator.',
+            ], 422);
+        }
+
         try {
             $order = $this->orderService->create(
                 [

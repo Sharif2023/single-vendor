@@ -24,7 +24,7 @@ export default function Footer() {
           <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Contact</h4>
           <ul className="space-y-2 text-sm text-gray-500">
             <li>support@singlevendor.com</li>
-            <li>+1 (555) 123-4567</li>
+            <li>+880 1711 223344</li>
           </ul>
         </div>
       </div>

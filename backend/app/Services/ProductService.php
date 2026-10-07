@@ -18,10 +18,10 @@ class ProductService
     public function list(array $filters = []): \Illuminate\Pagination\LengthAwarePaginator
     {
         $search   = $filters['search'] ?? null;
-        $perPage  = min((int) ($filters['per_page'] ?? 15), 50);
+        $perPage  = min((int) ($filters['per_page'] ?? 16), 50);
         $page     = (int) ($filters['page'] ?? 1);
 
-        $query = Product::active();
+        $query = Product::with('images')->active();
 
         $sort = $filters['sort'] ?? null;
 
@@ -45,9 +45,7 @@ class ProductService
      */
     public function findPublic(int $id): ?Product
     {
-        return Cache::remember("product:{$id}", self::CACHE_DETAIL_TTL, function () use ($id) {
-            return Product::active()->find($id);
-        });
+        return Product::with('images')->active()->find($id);
     }
 
     /**

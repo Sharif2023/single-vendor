@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingBag, ShieldCheck } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
 
@@ -29,11 +29,6 @@ export default function Navbar() {
 
         {/* ACTIONS */}
         <div className="flex items-center gap-4">
-          <Link href="/admin" className="text-xs font-semibold text-gray-500 hover:text-black hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors">
-            <ShieldCheck className="w-3.5 h-3.5 text-gray-400" />
-            Admin Panel
-          </Link>
-
           <Link href="/cart">
             <Button
               variant="ghost"

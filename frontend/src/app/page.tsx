@@ -45,7 +45,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-[#F8F9FA] font-body text-gray-900">
       <main className="flex-1 w-full">
-        {/* HERO & SEARCH SECTION (ByteSpace Aesthetics) */}
+        {/* HERO & SEARCH SECTION (Single Vendor Storefront) */}
         <section className="w-full bg-white border-b border-gray-200/80 pt-12 pb-14 px-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full bg-blue-50/70 blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-1/3 -mb-20 w-72 h-72 rounded-full bg-[#D6FD04]/20 blur-3xl pointer-events-none" />
