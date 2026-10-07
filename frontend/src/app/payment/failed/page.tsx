@@ -58,7 +58,16 @@ function FailedContent() {
 export default function PaymentFailedPage() {
   return (
     <>
-      <Suspense fallback={<div className="h-screen flex items-center justify-center">Loading...</div>}>
+      <Suspense
+        fallback={
+          <div className="h-screen flex flex-col items-center justify-center gap-4 bg-gray-50/50">
+            <span className="loader"></span>
+            <p className="text-sm font-medium text-gray-500 animate-pulse tracking-wide">
+              Loading payment details...
+            </p>
+          </div>
+        }
+      >
         <FailedContent />
       </Suspense>
     </>

@@ -36,7 +36,20 @@ class AdminOrderController extends Controller
             $query->where(function ($q) use ($search, $like) {
                 $q->where('customer_name', $like, "%{$search}%")
                   ->orWhere('customer_email', $like, "%{$search}%")
-                  ->orWhere('id', $search);
+                  ->orWhere('customer_phone', $like, "%{$search}%");
+
+                if (is_numeric($search)) {
+                    $q->orWhere('id', (int) $search);
+                }
+
+                $q->orWhereHas('delivery', function ($dq) use ($search, $like) {
+                    $dq->where('consignment_id', $like, "%{$search}%")
+                       ->orWhere('tracking_code', $like, "%{$search}%");
+                });
+
+                $q->orWhereHas('payment', function ($pq) use ($search, $like) {
+                    $pq->where('transaction_id', $like, "%{$search}%");
+                });
             });
         }
 

@@ -47,10 +47,10 @@
 :root {
   --font-display: "Poppins", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
-  --color-bytespace-blue: #003be2;
-  --color-bytespace-darkblue: #002db8;
-  --color-bytespace-lime: #d6fd04;
-  --color-bytespace-lime-hover: #c5ea02;
+  --color-brand-blue: #003be2;
+  --color-brand-darkblue: #002db8;
+  --color-brand-lime: #d6fd04;
+  --color-brand-lime-hover: #c5ea02;
   --background: oklch(1 0 0);
   --foreground: oklch(0.1 0 0);
   --card: oklch(1 0 0);
@@ -104,3 +104,46 @@
     font-family: var(--font-sans);
   }
 }
+
+/* Project Custom Loader */
+.loader {
+  --color-1: var(--color-brand-blue, #003be2);
+  --size: 1px;
+  width: calc(48 * var(--size));
+  height: calc(48 * var(--size));
+  border: calc(5 * var(--size)) solid var(--color-1);
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+.loader-white {
+  --color-1: #ffffff;
+}
+
+.loader-lime {
+  --color-1: var(--color-brand-lime, #d6fd04);
+}
+
+.loader-sm {
+  --size: 0.5px;
+}
+
+.loader-md {
+  --size: 0.75px;
+}
+
+.loader-lg {
+  --size: 1px;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

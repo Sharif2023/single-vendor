@@ -71,8 +71,15 @@ export default function AdminLogin() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign in"}
+            <Button type="submit" className="w-full flex items-center justify-center gap-2" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <span className="loader" style={{ "--color-1": "#ffffff", "--size": "0.38px" } as React.CSSProperties}></span>
+                  <span>Signing in...</span>
+                </>
+              ) : (
+                "Sign in"
+              )}
             </Button>
           </CardFooter>
         </form>

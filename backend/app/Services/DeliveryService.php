@@ -10,12 +10,16 @@ use Illuminate\Support\Facades\Log;
 class DeliveryService
 {
     private string $apiUrl;
-    private string $apiKey;
+    private ?string $clientId;
+    private ?string $clientSecret;
+    private ?string $clientContext;
 
     public function __construct()
     {
-        $this->apiUrl = config('services.carrybee.api_url', 'https://api.carrybee.com/v1');
-        $this->apiKey = config('services.carrybee.api_key', '');
+        $this->apiUrl        = config('services.carrybee.api_url', 'https://api.carrybee.com/v1');
+        $this->clientId      = config('services.carrybee.client_id');
+        $this->clientSecret  = config('services.carrybee.client_secret');
+        $this->clientContext = config('services.carrybee.client_context');
     }
 
     /**
@@ -37,24 +41,32 @@ class DeliveryService
         // Increment attempt count
         $delivery->increment('attempt_count');
 
+        $address = trim($order->customer_address);
+        if (strlen($address) < 10) {
+            $address = $address . ', Bangladesh';
+        }
+
         $payload = [
-            'merchant_order_id' => (string) $order->id,
-            'recipient_name'    => $order->customer_name,
-            'recipient_phone'   => $order->customer_phone,
-            'recipient_email'   => $order->customer_email,
-            'recipient_address' => $order->customer_address,
-            'amount_to_collect' => 0, // Already paid online
-            'order_amount'      => $order->total,
-            'item_description'  => $this->buildItemDescription($order),
+            'store_id'           => (int) config('services.carrybee.store_id', 3753),
+            'delivery_type'      => 1, // Standard Delivery
+            'product_type'       => 1, // Parcel
+            'merchant_order_id'  => 'ORDER-' . $order->id,
+            'recipient_name'     => $order->customer_name,
+            'recipient_phone'    => $order->customer_phone,
+            'recipient_address'  => $address,
+            'item_weight'        => max(1, (int) $order->items->sum('quantity')),
+            'collectable_amount' => 0, // Online paid
         ];
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->apiKey,
-            'Accept'        => 'application/json',
+            'Client-Id'      => $this->clientId,
+            'Client-Secret'  => $this->clientSecret,
+            'Client-Context' => $this->clientContext,
+            'Accept'         => 'application/json',
         ])
             ->timeout(20)
             ->retry(2, 500) // HTTP-level retry for transient failures
-            ->post("{$this->apiUrl}/parcels", $payload);
+            ->post("{$this->apiUrl}/api/v2/orders", $payload);
 
         if (! $response->successful()) {
             $errorBody = $response->body();
@@ -67,10 +79,15 @@ class DeliveryService
         }
 
         $data = $response->json();
+        $orderData = $data['data']['order'] ?? $data;
+        $consignmentId = $orderData['consignment_id'] ?? null;
+        $trackingUrl = !empty($orderData['tracking_link']) 
+            ? $orderData['tracking_link'] 
+            : ($consignmentId ? "https://carrybee.com/track?consignmentId={$consignmentId}" : null);
 
         $delivery->update([
-            'consignment_id' => $data['consignment_id'] ?? $data['id'] ?? null,
-            'tracking_url'   => $data['tracking_url'] ?? null,
+            'consignment_id' => $consignmentId,
+            'tracking_url'   => $trackingUrl,
             'status'         => Delivery::STATUS_DISPATCHED,
             'api_response'   => $data,
             'dispatched_at'  => now(),
@@ -97,32 +114,30 @@ class DeliveryService
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Accept'        => 'application/json',
+                'Client-Id'      => $this->clientId,
+                'Client-Secret'  => $this->clientSecret,
+                'Client-Context' => $this->clientContext,
+                'Accept'         => 'application/json',
             ])
                 ->timeout(10)
-                ->get("{$this->apiUrl}/parcels/{$delivery->consignment_id}");
+                ->get("{$this->apiUrl}/api/v2/orders/{$delivery->consignment_id}");
 
             if (! $response->successful()) {
                 return;
             }
 
             $data = $response->json();
-            $remoteStatus = $data['status'] ?? null;
+            $orderData = $data['data']['order'] ?? $data;
+            $transferStatusId = $orderData['transfer_status_id'] ?? null;
 
-            $statusMap = [
-                'delivered'   => Delivery::STATUS_DELIVERED,
-                'in_transit'  => Delivery::STATUS_IN_TRANSIT,
-                'returned'    => Delivery::STATUS_RETURNED,
-            ];
-
-            if ($remoteStatus && isset($statusMap[$remoteStatus])) {
-                $delivery->update(['status' => $statusMap[$remoteStatus], 'api_response' => $data]);
-
-                // If delivered, update order status
-                if ($statusMap[$remoteStatus] === Delivery::STATUS_DELIVERED) {
-                    $delivery->order?->update(['status' => Order::STATUS_DELIVERED]);
-                }
+            // CarryBee transfer_status_id mapping
+            if ($transferStatusId === 1) {
+                $delivery->update(['status' => Delivery::STATUS_DISPATCHED, 'api_response' => $data]);
+            } elseif ($transferStatusId === 2) {
+                $delivery->update(['status' => Delivery::STATUS_IN_TRANSIT, 'api_response' => $data]);
+            } elseif ($transferStatusId >= 3) {
+                $delivery->update(['status' => Delivery::STATUS_DELIVERED, 'api_response' => $data]);
+                $delivery->order?->update(['status' => Order::STATUS_DELIVERED]);
             }
         } catch (\Exception $e) {
             Log::warning('CarryBee status sync failed', [

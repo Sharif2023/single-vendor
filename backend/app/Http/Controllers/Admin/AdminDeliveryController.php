@@ -18,6 +18,7 @@ class AdminDeliveryController extends Controller
     public function index(Request $request): JsonResponse
     {
         $status  = $request->input('status');
+        $search  = $request->input('search');
         $perPage = min((int) $request->input('per_page', 15), 100);
 
         $query = Delivery::with('order')
@@ -25,6 +26,25 @@ class AdminDeliveryController extends Controller
 
         if ($status) {
             $query->where('status', $status);
+        }
+
+        if ($search) {
+            $like = \DB::connection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
+            $query->where(function ($q) use ($search, $like) {
+                $q->where('consignment_id', $like, "%{$search}%")
+                  ->orWhere('tracking_code', $like, "%{$search}%");
+
+                if (is_numeric($search)) {
+                    $q->orWhere('id', (int) $search)
+                      ->orWhere('order_id', (int) $search);
+                }
+
+                $q->orWhereHas('order', function ($oq) use ($search, $like) {
+                    $oq->where('customer_name', $like, "%{$search}%")
+                       ->orWhere('customer_phone', $like, "%{$search}%")
+                       ->orWhere('customer_email', $like, "%{$search}%");
+                });
+            });
         }
 
         $deliveries = $query->paginate($perPage);
