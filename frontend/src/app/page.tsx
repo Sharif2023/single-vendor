@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Star, Search, Filter, ShoppingBag, Package, AlertCircle, ArrowUpDown, Sparkles } from "lucide-react";
+import { Star, Search, Filter, ShoppingBag, Package, AlertCircle, ArrowUpDown, Sparkles, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useProducts } from "@/hooks/useProducts";
 import { useCart } from "@/hooks/useCart";
@@ -86,10 +86,10 @@ export default function Home() {
                 </div>
 
                 {/* SORT SELECTOR */}
-                <div className="relative sm:w-56 shrink-0">
+                <div className="relative w-full sm:w-[250px] shrink-0">
                   <ArrowUpDown className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
                   <select
-                    className="w-full pl-10 pr-8 h-12 bg-gray-50/70 hover:bg-gray-50 border border-gray-200 text-gray-900 rounded-2xl appearance-none text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-black cursor-pointer transition-all"
+                    className="w-full pl-10 pr-9 h-12 bg-gray-50/70 hover:bg-gray-50 focus:bg-white border border-gray-200 text-gray-900 rounded-2xl appearance-none text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-black cursor-pointer transition-all shadow-xs"
                     value={sort}
                     onChange={(e) => {
                       setSort(e.target.value);
@@ -100,6 +100,7 @@ export default function Home() {
                     <option value="price_asc">Price: Low to High</option>
                     <option value="price_desc">Price: High to Low</option>
                   </select>
+                  <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
                 </div>
               </div>
 
