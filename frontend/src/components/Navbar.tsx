@@ -19,10 +19,10 @@ export default function Navbar() {
           </div>
           <div className="flex flex-col">
             <span className="font-display font-extrabold text-lg tracking-tight text-gray-900 leading-none">
-              STORE<span className="text-[#003BE2]">.</span>
+              SINGLE<span className="text-[#003BE2]">-</span>VENDOR
             </span>
             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mt-0.5">
-              Single-Vendor
+              Online Shopping Store
             </span>
           </div>
         </Link>

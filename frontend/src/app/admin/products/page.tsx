@@ -683,21 +683,27 @@ function AdminProductsContent() {
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4 py-2">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Product Name *</Label>
+                <Label htmlFor="name" className="text-xs font-semibold whitespace-nowrap text-gray-700">
+                  Product Name <span className="text-red-500">*</span>
+                </Label>
                 <Input
                   id="name"
                   required
+                  placeholder="e.g. Wireless Noise-Cancelling Headphones"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="sku">SKU *</Label>
+                <Label htmlFor="sku" className="text-xs font-semibold whitespace-nowrap text-gray-700">
+                  SKU <span className="text-red-500">*</span>
+                </Label>
                 <Input
                   id="sku"
                   required
+                  placeholder="e.g. AUD-WHP-001"
                   value={formData.sku}
                   onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
                 />
@@ -705,18 +711,23 @@ function AdminProductsContent() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description" className="text-xs font-semibold text-gray-700">
+                Description
+              </Label>
               <Textarea
                 id="description"
                 rows={3}
+                placeholder="Detailed specifications, features, and warranty details..."
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="price">Price (৳) *</Label>
+                <Label htmlFor="price" className="text-xs font-semibold whitespace-nowrap text-gray-700">
+                  Price (৳) <span className="text-red-500">*</span>
+                </Label>
                 <Input
                   id="price"
                   type="number"
@@ -728,7 +739,9 @@ function AdminProductsContent() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="stock">Stock Quantity *</Label>
+                <Label htmlFor="stock" className="text-xs font-semibold whitespace-nowrap text-gray-700">
+                  Stock Quantity <span className="text-red-500">*</span>
+                </Label>
                 <Input
                   id="stock"
                   type="number"
@@ -739,10 +752,12 @@ function AdminProductsContent() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="status">Status *</Label>
+                <Label htmlFor="status" className="text-xs font-semibold whitespace-nowrap text-gray-700">
+                  Status <span className="text-red-500">*</span>
+                </Label>
                 <select
                   id="status"
-                  className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#003BE2] focus-visible:ring-offset-2"
                   value={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.value as "active" | "inactive" })}
                 >
